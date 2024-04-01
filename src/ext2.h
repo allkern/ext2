@@ -255,13 +255,11 @@ struct ext2_state {
 /* Implementation */
 int ext2i_read_sector(void* buf, uint32_t lba);
 
-typedef void (*ext2_dir_iterate_fn)(struct ext2_dirent*);
-
 int ext2_init();
 int ext2_get_inode(struct ext2_inode* inode, uint32_t index);
 int ext2_search(struct ext2_inode* inode, const char* path);
 int ext2_dir_search_entry(struct ext2_inode* inode, struct ext2_dirent* dirent, int index);
-int ext2_dir_iterate(struct ext2_inode* inode, ext2_dir_iterate_fn func);
+int ext2_dir_iterate(struct ext2_inode* inode, void (*iterate_func)(struct ext2_dirent*));
 
 /* Filesystem interface */
 int ext2_stat(const char* path);

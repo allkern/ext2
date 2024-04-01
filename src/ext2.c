@@ -165,7 +165,7 @@ int ext2_dir_search_entry(struct ext2_inode* inode, struct ext2_dirent* dirent, 
     return 0;
 }
 
-int ext2_dir_iterate(struct ext2_inode* inode, ext2_dir_iterate_fn func) {
+int ext2_dir_iterate(struct ext2_inode* inode, void (*iterate_func)(struct ext2_dirent*)) {
     if ((inode->s_tp & 0xf000) != INODE_DIRECTORY) {
         printf("Path is not a directory\n");
 
@@ -185,7 +185,7 @@ int ext2_dir_iterate(struct ext2_inode* inode, ext2_dir_iterate_fn func) {
             if (!entry->s_inode)
                 continue;
 
-            func(entry);
+            iterate_func(entry);
         }
     }
 

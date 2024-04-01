@@ -111,6 +111,7 @@ int main(int argc, const char* argv[]) {
 
         printf("%s\n", buf);
 
+        free(buf);
         ext2_fclose(&file);
     } else {
         ext2_dir_iterate(&inode, dir_print);
@@ -118,6 +119,7 @@ int main(int argc, const char* argv[]) {
         putchar('\n');
     }
 
+    free(args);
     fclose(file);
 
     return 0;
