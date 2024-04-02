@@ -20,23 +20,35 @@ void dir_print(struct ext2_dirent* entry) {
 
     struct ext2_inode inode;
 
-    // printf("entry inode=%u\n", entry->s_inode);
+    ext2_get_inode(&inode, entry->s_inode);
 
-    // ext2_get_inode(&inode, entry->s_inode);
+    time_t t = inode.s_creation_time;
 
-    // printf("entry inode=%u\n", entry->s_inode);
+    struct tm* tm = gmtime(&t);
 
-    // time_t t = inode.s_creation_time;
+    char buf[128];
 
-    // struct tm* tm = gmtime(&t);
+    strftime(buf, 128, "%b %e %H:%M", tm);
 
-    // const char* fmt = "%a %b %e %H:%M:%S %Y (%e/%m/%Y)";
+    const char* user = "user";
 
-    // char buf[128];
+    if (inode.s_user_id == 0)
+        user = "root";
 
-    // strftime(buf, 8, fmt, tm);
-
-    //printf("%s", buf);
+    printf("%c%c%c%c%c%c%c%c%c%c %s %9u %s ",
+        (entry->s_type == DIRENT_DIRECTORY) ? 'd' : '-',
+        (inode.s_tp & PERM_USER_R) ? 'r' : '-',
+        (inode.s_tp & PERM_USER_W) ? 'w' : '-',
+        (inode.s_tp & PERM_USER_X) ? 'x' : '-',
+        (inode.s_tp & PERM_GROUP_R) ? 'r' : '-',
+        (inode.s_tp & PERM_GROUP_W) ? 'w' : '-',
+        (inode.s_tp & PERM_GROUP_X) ? 'x' : '-',
+        (inode.s_tp & PERM_OTHER_R) ? 'r' : '-',
+        (inode.s_tp & PERM_OTHER_W) ? 'w' : '-',
+        (inode.s_tp & PERM_OTHER_X) ? 'x' : '-',
+        user,
+        inode.s_sizel, buf
+    );
 
     for (int i = 0; i < entry->s_name_len; i++)
         putchar(entry->s_name[i]);
@@ -44,7 +56,7 @@ void dir_print(struct ext2_dirent* entry) {
     if (entry->s_type == DIRENT_DIRECTORY)
         putchar('/');
 
-    putchar(' ');
+    putchar('\n');
 }
 
 int main(int argc, const char* argv[]) {

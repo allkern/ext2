@@ -166,6 +166,8 @@ int ext2_dir_search_entry(struct ext2_inode* inode, struct ext2_dirent* dirent, 
 }
 
 int ext2_dir_iterate(struct ext2_inode* inode, void (*iterate_func)(struct ext2_dirent*)) {
+    char buf[EXT2_SECTOR_SIZE];
+
     if ((inode->s_tp & 0xf000) != INODE_DIRECTORY) {
         printf("Path is not a directory\n");
 
@@ -175,10 +177,10 @@ int ext2_dir_iterate(struct ext2_inode* inode, void (*iterate_func)(struct ext2_
     int i = 0;
 
     while (inode->s_direct[i]) {
-        ext2i_read_sector(state.buf, inode->s_direct[i++]);
+        ext2i_read_sector(buf, inode->s_direct[i++]);
 
         for (int j = 0; j < EXT2_SECTOR_SIZE;) {
-            struct ext2_dirent* entry = (struct ext2_dirent*)(state.buf + j);
+            struct ext2_dirent* entry = (struct ext2_dirent*)(buf + j);
 
             j += entry->s_size;
 
