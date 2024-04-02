@@ -60,7 +60,7 @@ extern "C" {
 */
 
 struct ext2_sb {
-	uint32_t s_total_inodes;
+    uint32_t s_total_inodes;
     uint32_t s_total_blocks;
     uint32_t s_resv_su_blocks;
     uint32_t s_free_blocks;
