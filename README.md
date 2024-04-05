@@ -1,3 +1,3 @@
 # ext2
 
-Simple ext2 filesystem driver in C
+Simple ext2 filesystem library written in C
